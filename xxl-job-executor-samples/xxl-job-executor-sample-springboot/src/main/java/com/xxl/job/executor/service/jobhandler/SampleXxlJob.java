@@ -68,16 +68,23 @@ public class SampleXxlJob {
     @XxlJob("shardingJobHandler")
     public ReturnT<String> shardingJobHandler(String param) throws Exception {
 
-        // 分片参数
+        XxlJobLogger.log("XXL-JOB-shardingJobHandler, Hello World.");
+
+        LocalDateTime localDate = LocalDateTime .now();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String strDate = localDate.format(dtf);
+
+        logger.info("shardingJobHandler，ThreadName【{}】,当前时间【{}】",Thread.currentThread().getName(),strDate);
+
         ShardingUtil.ShardingVO shardingVO = ShardingUtil.getShardingVo();
-        XxlJobLogger.log("分片参数：当前分片序号 = {}, 总分片数 = {}", shardingVO.getIndex(), shardingVO.getTotal());
+        logger.info("分片参数：当前分片序号 = {}, 总分片数 = {}", shardingVO.getIndex(), shardingVO.getTotal());
 
         // 业务逻辑
         for (int i = 0; i < shardingVO.getTotal(); i++) {
             if (i == shardingVO.getIndex()) {
-                XxlJobLogger.log("第 {} 片, 命中分片开始处理", i);
+                logger.info("第 {} 片, 命中分片开始处理", i);
             } else {
-                XxlJobLogger.log("第 {} 片, 忽略", i);
+                logger.info("第 {} 片, 忽略", i);
             }
         }
 
